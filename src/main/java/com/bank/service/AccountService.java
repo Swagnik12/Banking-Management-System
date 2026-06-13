@@ -22,7 +22,11 @@ public class AccountService {
         account.setAccountType(accountType.toUpperCase());
         account.setBalance(0.00);
         account.setStatus("PENDING"); // Pending admin approval
-        return accountDAO.createAccount(account);
+        boolean success = accountDAO.createAccount(account);
+        if (success) {
+            new com.bank.dao.NotificationDAO().createNotification("New Account", "New " + accountType + " account created for User ID: " + userId, "INFO");
+        }
+        return success;
     }
 
     public List<Account> getAccounts(int userId) {

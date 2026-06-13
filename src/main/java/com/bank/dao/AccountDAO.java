@@ -102,6 +102,56 @@ public class AccountDAO {
         return false;
     }
 
+    /**
+     * Freeze all ACTIVE accounts belonging to a user.
+     * Called automatically when the user is suspended.
+     * Returns the number of accounts frozen (0 is valid).
+     */
+    public int freezeActiveAccountsByUserId(int userId) {
+        return freezeAccountsByUserId(userId);
+    }
+
+    /**
+     * Reactivate all FROZEN accounts belonging to a user.
+     * Called automatically when the user is reactivated.
+     * Returns the number of accounts reactivated (0 is valid).
+     */
+    public int reactivateFrozenAccountsByUserId(int userId) {
+        return reactivateAccountsByUserId(userId);
+    }
+
+    /**
+     * Freeze all ACTIVE accounts for a user.
+     * SQL: UPDATE accounts SET status='FROZEN' WHERE user_id=? AND status='ACTIVE'
+     */
+    public int freezeAccountsByUserId(int userId) {
+        String sql = "UPDATE accounts SET status = 'FROZEN' WHERE user_id = ? AND status = 'ACTIVE'";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
+     * Reactivate all FROZEN accounts for a user.
+     * SQL: UPDATE accounts SET status='ACTIVE' WHERE user_id=? AND status='FROZEN'
+     */
+    public int reactivateAccountsByUserId(int userId) {
+        String sql = "UPDATE accounts SET status = 'ACTIVE' WHERE user_id = ? AND status = 'FROZEN'";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     public List<Account> getAllAccounts() {
         List<Account> list = new ArrayList<>();
         String sql = "SELECT * FROM accounts ORDER BY created_at DESC";
@@ -149,8 +199,62 @@ public class AccountDAO {
         return 0;
     }
 
+    public List<Account> searchAccounts(String query) {
+        List<Account> list = new ArrayList<>();
+        String sql = "SELECT a.*, u.full_name AS customer_name FROM accounts a " +
+                     "LEFT JOIN users u ON a.user_id = u.user_id WHERE " +
+                     "CAST(a.account_id AS CHAR) LIKE ? OR " +
+                     "LOWER(a.account_number) LIKE ? OR " +
+                     "LOWER(u.full_name) LIKE ? OR " +
+                     "LOWER(a.account_type) LIKE ? " +
+                     "ORDER BY a.created_at DESC";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            String searchPattern = "%" + query.toLowerCase() + "%";
+            ps.setString(1, searchPattern);
+            ps.setString(2, searchPattern);
+            ps.setString(3, searchPattern);
+            ps.setString(4, searchPattern);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(mapResultSetToAccount(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Account> getAllAccountsWithCustomerName() {
+        List<Account> list = new ArrayList<>();
+        String sql = "SELECT a.*, u.full_name AS customer_name FROM accounts a " +
+                     "LEFT JOIN users u ON a.user_id = u.user_id " +
+                     "ORDER BY a.created_at DESC";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                list.add(mapResultSetToAccount(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    private boolean hasColumn(ResultSet rs, String columnName) throws SQLException {
+        ResultSetMetaData meta = rs.getMetaData();
+        for (int i = 1; i <= meta.getColumnCount(); i++) {
+            if (columnName.equalsIgnoreCase(meta.getColumnLabel(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private Account mapResultSetToAccount(ResultSet rs) throws SQLException {
-        return new Account(
+        Account account = new Account(
                 rs.getInt("account_id"),
                 rs.getString("account_number"),
                 rs.getInt("user_id"),
@@ -159,5 +263,9 @@ public class AccountDAO {
                 rs.getString("status"),
                 rs.getTimestamp("created_at")
         );
+        if (hasColumn(rs, "customer_name")) {
+            account.setCustomerName(rs.getString("customer_name"));
+        }
+        return account;
     }
 }

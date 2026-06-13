@@ -26,7 +26,7 @@ CREATE TABLE accounts (
     user_id INT NOT NULL,
     account_type ENUM('SAVINGS', 'CURRENT') NOT NULL,
     balance DECIMAL(15, 2) DEFAULT 0.00,
-    status ENUM('PENDING', 'ACTIVE', 'SUSPENDED', 'CLOSED') DEFAULT 'PENDING',
+    status ENUM('PENDING', 'ACTIVE', 'FROZEN', 'CLOSED') DEFAULT 'PENDING',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
@@ -47,3 +47,27 @@ CREATE TABLE transactions (
 -- SHA-256 of admin123: 240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9
 INSERT INTO users (full_name, email, phone, address, password, role, status)
 VALUES ('Administrator', 'admin@bank.com', '0000000000', 'System Head Office', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', 'ADMIN', 'ACTIVE');
+
+-- notifications table
+CREATE TABLE notifications (
+    notification_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    message VARCHAR(255) NOT NULL,
+    type VARCHAR(20) NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ============================================================
+-- MIGRATION: Standardize account status SUSPENDED → FROZEN
+-- Run this against existing databases that have SUSPENDED rows
+-- ============================================================
+
+-- Step 1: Temporarily widen the column to allow both values during migration
+ALTER TABLE accounts MODIFY COLUMN status ENUM('PENDING', 'ACTIVE', 'SUSPENDED', 'FROZEN', 'CLOSED') DEFAULT 'PENDING';
+
+-- Step 2: Migrate all existing SUSPENDED rows to FROZEN
+UPDATE accounts SET status = 'FROZEN' WHERE status = 'SUSPENDED';
+
+-- Step 3: Lock the column to the final allowed set (drop SUSPENDED)
+ALTER TABLE accounts MODIFY COLUMN status ENUM('PENDING', 'ACTIVE', 'FROZEN', 'CLOSED') DEFAULT 'PENDING';

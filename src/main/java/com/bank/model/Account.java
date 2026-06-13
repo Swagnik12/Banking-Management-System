@@ -6,6 +6,7 @@ public class Account {
     private int accountId;
     private String accountNumber;
     private int userId;
+    private String customerName;
     private String accountType;
     private double balance;
     private String status;
@@ -31,6 +32,9 @@ public class Account {
 
     public int getUserId() { return userId; }
     public void setUserId(int userId) { this.userId = userId; }
+
+    public String getCustomerName() { return customerName; }
+    public void setCustomerName(String customerName) { this.customerName = customerName; }
 
     public String getAccountType() { return accountType; }
     public void setAccountType(String accountType) { this.accountType = accountType; }

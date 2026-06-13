@@ -17,19 +17,32 @@ public class UserService {
         user.setPassword(hashedPassword);
         user.setRole("CUSTOMER");
         user.setStatus("PENDING"); // Administrator approves later
-        return userDAO.createUser(user);
+        boolean success = userDAO.createUser(user);
+        if (success) {
+            new com.bank.dao.NotificationDAO().createNotification("New Customer", "New customer registered: " + user.getEmail(), "SUCCESS");
+        }
+        return success;
     }
 
     public User login(String email, String password) {
         User user = userDAO.getUserByEmail(email);
-        if (user != null) {
-            String hashedPassword = ValidationUtil.hashPassword(password);
-            if (user.getPassword().equals(hashedPassword)) {
-                if ("SUSPENDED".equalsIgnoreCase(user.getStatus())) {
-                    throw new IllegalStateException("Your account has been suspended. Please contact admin.");
-                }
-                return user;
+        if (user == null) {
+            System.out.println("[UserService] login failed: no user for email=" + email);
+            return null;
+        }
+
+        String hashedPassword = ValidationUtil.hashPassword(password);
+        boolean passwordMatch = user.getPassword().equals(hashedPassword);
+        System.out.println("[UserService] login email=" + email
+                + " userFound=true role=" + user.getRole()
+                + " status=" + user.getStatus()
+                + " passwordMatch=" + passwordMatch);
+
+        if (passwordMatch) {
+            if ("SUSPENDED".equalsIgnoreCase(user.getStatus())) {
+                throw new IllegalStateException("Your account has been suspended. Please contact admin.");
             }
+            return user;
         }
         return null;
     }

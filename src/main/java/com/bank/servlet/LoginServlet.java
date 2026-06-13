@@ -28,14 +28,36 @@ public class LoginServlet extends HttpServlet {
             }
             return;
         }
+
+        // Promote one-time session flash messages to request scope before rendering
+        Object successMsg = request.getSession().getAttribute("success");
+        if (successMsg != null) {
+            request.setAttribute("success", successMsg);
+            request.getSession().removeAttribute("success");
+        }
+        Object errorMsg = request.getSession().getAttribute("error");
+        if (errorMsg != null) {
+            request.setAttribute("error", errorMsg);
+            request.getSession().removeAttribute("error");
+        }
+
         request.getRequestDispatcher("/jsp/login.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+
         String email = request.getParameter("email");
         String password = request.getParameter("password");
+
+        if (email != null) {
+            email = email.trim();
+        }
+
+        System.out.println("[LoginServlet] login attempt email=" + email
+                + " passwordLength=" + (password != null ? password.length() : 0));
 
         if (ValidationUtil.isNullOrEmpty(email) || ValidationUtil.isNullOrEmpty(password)) {
             request.setAttribute("error", "Email and Password are required");

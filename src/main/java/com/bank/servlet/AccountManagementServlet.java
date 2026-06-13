@@ -19,7 +19,14 @@ public class AccountManagementServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            List<Account> accounts = adminService.getAllAccounts();
+            String searchQuery = request.getParameter("search");
+            List<Account> accounts;
+            if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+                accounts = adminService.searchAccounts(searchQuery.trim());
+                request.setAttribute("searchQuery", searchQuery.trim());
+            } else {
+                accounts = adminService.getAllAccounts();
+            }
             request.setAttribute("accounts", accounts);
             request.getRequestDispatcher("/jsp/manage-accounts.jsp").forward(request, response);
         } catch (Exception e) {
@@ -45,12 +52,15 @@ public class AccountManagementServlet extends HttpServlet {
             int accountId = Integer.parseInt(accountIdStr);
             boolean success = false;
 
-            if ("activate".equalsIgnoreCase(action)) {
-                success = adminService.activateAccount(accountId);
-                if (success) request.setAttribute("success", "Account status updated to ACTIVE!");
-            } else if ("suspend".equalsIgnoreCase(action)) {
-                success = adminService.suspendAccount(accountId);
-                if (success) request.setAttribute("success", "Account status updated to SUSPENDED!");
+            if ("approve".equalsIgnoreCase(action)) {
+                success = adminService.approveAccount(accountId);
+                if (success) request.setAttribute("success", "Account #" + accountId + " has been approved and is now ACTIVE.");
+            } else if ("freeze".equalsIgnoreCase(action)) {
+                success = adminService.freezeAccount(accountId);
+                if (success) request.setAttribute("success", "Account #" + accountId + " has been frozen.");
+            } else if ("reactivate".equalsIgnoreCase(action)) {
+                success = adminService.reactivateAccount(accountId);
+                if (success) request.setAttribute("success", "Account #" + accountId + " has been reactivated.");
             } else {
                 request.setAttribute("error", "Invalid account management action requested");
             }

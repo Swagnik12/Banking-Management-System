@@ -19,7 +19,14 @@ public class UserManagementServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            List<User> users = adminService.getAllUsers();
+            String searchQuery = request.getParameter("search");
+            List<User> users;
+            if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+                users = adminService.searchUsers(searchQuery.trim());
+                request.setAttribute("searchQuery", searchQuery.trim());
+            } else {
+                users = adminService.getAllUsers();
+            }
             request.setAttribute("users", users);
             request.getRequestDispatcher("/jsp/manage-users.jsp").forward(request, response);
         } catch (Exception e) {

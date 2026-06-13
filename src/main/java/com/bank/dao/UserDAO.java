@@ -156,6 +156,32 @@ public class UserDAO {
         return list;
     }
 
+    public List<User> searchUsers(String query) {
+        List<User> list = new ArrayList<>();
+        String sql = "SELECT * FROM users WHERE " +
+                     "LOWER(full_name) LIKE ? OR " +
+                     "LOWER(email) LIKE ? OR " +
+                     "LOWER(phone) LIKE ? OR " +
+                     "CAST(user_id AS CHAR) LIKE ? " +
+                     "ORDER BY created_at DESC";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            String searchPattern = "%" + query.toLowerCase() + "%";
+            ps.setString(1, searchPattern);
+            ps.setString(2, searchPattern);
+            ps.setString(3, searchPattern);
+            ps.setString(4, searchPattern);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(mapResultSetToUser(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     private User mapResultSetToUser(ResultSet rs) throws SQLException {
         return new User(
                 rs.getInt("user_id"),

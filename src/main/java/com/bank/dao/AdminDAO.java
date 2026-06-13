@@ -45,7 +45,7 @@ public class AdminDAO {
     }
 
     public int getSuspendedAccounts() {
-        String sql = "SELECT COUNT(*) FROM accounts WHERE status = 'SUSPENDED'";
+        String sql = "SELECT COUNT(*) FROM accounts WHERE status = 'FROZEN'";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -58,6 +58,18 @@ public class AdminDAO {
 
     public int getTotalTransactions() {
         String sql = "SELECT COUNT(*) FROM transactions";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int getPendingUsersCount() {
+        String sql = "SELECT COUNT(*) FROM users WHERE status = 'PENDING' AND role = 'CUSTOMER'";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {

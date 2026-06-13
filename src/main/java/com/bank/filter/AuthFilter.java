@@ -36,15 +36,29 @@ public class AuthFilter implements Filter {
             return;
         }
 
-        // If not logged in, redirect to login page
+        // If not logged in — return 401 JSON for AJAX, redirect for normal requests
         if (!SessionUtil.isLoggedIn(httpRequest)) {
+            if ("XMLHttpRequest".equals(httpRequest.getHeader("X-Requested-With"))
+                    || relativeUri.contains("/api")) {
+                httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                httpResponse.setContentType("application/json");
+                httpResponse.getWriter().write("{\"error\":\"Unauthorized\"}");
+                return;
+            }
             httpResponse.sendRedirect(contextPath + "/login");
             return;
         }
 
-        // Access control for administrators
+        // Access control for administrators — return 403 JSON for AJAX, forward otherwise
         if (relativeUri.startsWith("/admin")) {
             if (!SessionUtil.isAdmin(httpRequest)) {
+                if ("XMLHttpRequest".equals(httpRequest.getHeader("X-Requested-With"))
+                        || relativeUri.contains("/api")) {
+                    httpResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    httpResponse.setContentType("application/json");
+                    httpResponse.getWriter().write("{\"error\":\"Forbidden\"}");
+                    return;
+                }
                 httpRequest.setAttribute("error", "Unauthorized access. Admin role required.");
                 httpRequest.getRequestDispatcher("/dashboard").forward(httpRequest, httpResponse);
                 return;
