@@ -115,6 +115,31 @@ public class TransactionDAO {
         return list;
     }
 
+    /**
+     * Fetch all transactions across every account belonging to a user.
+     * Joins accounts to resolve user_id → account_number mapping.
+     */
+    public List<Transaction> getTransactionsByUserId(int userId) {
+        List<Transaction> list = new ArrayList<>();
+        String sql = "SELECT t.* FROM transactions t " +
+                     "WHERE t.sender_account   IN (SELECT account_number FROM accounts WHERE user_id = ?) " +
+                     "   OR t.receiver_account IN (SELECT account_number FROM accounts WHERE user_id = ?) " +
+                     "ORDER BY t.transaction_date DESC";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(mapResultSetToTransaction(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     public List<Transaction> getAllTransactions() {
         List<Transaction> list = new ArrayList<>();
         String sql = "SELECT * FROM transactions ORDER BY transaction_date DESC";

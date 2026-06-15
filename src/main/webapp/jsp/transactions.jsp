@@ -1,137 +1,260 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Transaction History - Banking Management System</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History - FinTrust Global</title>
+
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/variables.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/components.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/forms.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/tables.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/animations.css">
+
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f3f4f6; margin: 0; color: #1f2937; }
-        .navbar { background-color: #1e3a8a; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-        .navbar h1 { margin: 0; font-size: 1.5rem; }
-        .nav-links a { color: white; text-decoration: none; margin-left: 1.5rem; font-weight: 500; }
-        .nav-links a:hover { text-decoration: underline; }
-        .container { max-width: 950px; margin: 2rem auto; padding: 0 1rem; }
-        .card { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.04); margin-bottom: 1.5rem; }
-        .card h3 { margin-top: 0; border-bottom: 2px solid #f3f4f6; padding-bottom: 0.5rem; color: #1e3a8a; }
-        .filter-form { display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end; margin-bottom: 1.5rem; }
-        .filter-group { display: flex; flex-direction: column; flex: 1; min-width: 150px; }
-        .filter-group label { font-size: 0.85rem; color: #4b5563; margin-bottom: 0.25rem; font-weight: 500; }
-        select, input[type="date"] { padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.9rem; }
-        .btn { background-color: #2563eb; color: white; padding: 0.5rem 1rem; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 0.9rem; }
-        .btn:hover { background-color: #1d4ed8; }
-        table { width: 100%; border-collapse: collapse; margin-top: 1rem; text-align: left; }
-        th, td { padding: 0.75rem; border-bottom: 1px solid #e5e7eb; }
-        th { background-color: #f9fafb; color: #4b5563; font-weight: 600; }
-        .status-badge { padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
-        .status-success { background-color: #dcfce7; color: #166534; }
-        .status-failed { background-color: #fee2e2; color: #991b1b; }
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+        .filter-grid .form-group {
+            margin-bottom: 0;
+        }
+        .filter-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: end;
+        }
+        @media (max-width: 640px) {
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+            .filter-actions {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
-<body>
+<body class="page-transition">
 
-    <div class="navbar">
-        <h1>Apex Trust Bank</h1>
-        <div class="nav-links">
-            <a href="${pageContext.request.contextPath}/dashboard">Dashboard</a>
-            <a href="${pageContext.request.contextPath}/profile">My Profile</a>
-            <a href="${pageContext.request.contextPath}/transactions">Transactions</a>
-            <a href="${pageContext.request.contextPath}/logout">Logout</a>
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div>
+            <div class="sidebar-brand">
+                <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+                <span>FinTrust</span>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="sidebar-item">
+                    <a href="${pageContext.request.contextPath}/dashboard">
+                        <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="${pageContext.request.contextPath}/transfer">
+                        <svg viewBox="0 0 24 24"><path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                        <span>Transfer</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="${pageContext.request.contextPath}/deposit">
+                        <svg viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+                        <span>Deposit</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="${pageContext.request.contextPath}/withdraw">
+                        <svg viewBox="0 0 24 24"><path d="M20 12H4"/></svg>
+                        <span>Withdraw</span>
+                    </a>
+                </li>
+                <li class="sidebar-item active">
+                    <a href="${pageContext.request.contextPath}/transactions">
+                        <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+                        <span>Transactions</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="${pageContext.request.contextPath}/profile">
+                        <svg viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                        <span>My Profile</span>
+                    </a>
+                </li>
+            </ul>
         </div>
-    </div>
-
-    <div class="container">
-        
-        <div class="card">
-            <h3>Transaction History</h3>
-            
-            <form action="${pageContext.request.contextPath}/transactions" method="get" class="filter-form">
-                <div class="filter-group">
-                    <label for="accountNumber">Account</label>
-                    <select id="accountNumber" name="accountNumber">
-                        <c:forEach var="acc" items="${accounts}">
-                            <option value="${acc.accountNumber}" <c:if test="${acc.accountNumber == selectedAccount}">selected</c:if>>
-                                ${acc.accountType} (${acc.accountNumber})
-                            </option>
-                        </c:forEach>
-                    </select>
+        <div class="sidebar-footer">
+            <div class="sidebar-profile">
+                <div class="avatar avatar-blue">
+                    <c:out value="${fn:substring(sessionScope.user.fullName, 0, 1)}" default="U"/>
                 </div>
-                
-                <div class="filter-group">
-                    <label for="transactionType">Transaction Type</label>
-                    <select id="transactionType" name="transactionType">
-                        <option value="ALL" <c:if test="${selectedType == 'ALL'}">selected</c:if>>All Types</option>
-                        <option value="DEPOSIT" <c:if test="${selectedType == 'DEPOSIT'}">selected</c:if>>Deposits</option>
-                        <option value="WITHDRAWAL" <c:if test="${selectedType == 'WITHDRAWAL'}">selected</c:if>>Withdrawals</option>
-                        <option value="TRANSFER" <c:if test="${selectedType == 'TRANSFER'}">selected</c:if>>Transfers</option>
-                    </select>
+                <div class="sidebar-profile-info">
+                    <div class="sidebar-profile-name">${sessionScope.user.fullName}</div>
+                    <div class="sidebar-profile-role">${sessionScope.user.role} Account</div>
                 </div>
-                
-                <div class="filter-group">
-                    <label for="fromDate">From Date</label>
-                    <input type="date" id="fromDate" name="fromDate" value="${fromDate}">
-                </div>
-                
-                <div class="filter-group">
-                    <label for="toDate">To Date</label>
-                    <input type="date" id="toDate" name="toDate" value="${toDate}">
-                </div>
-                
-                <button type="submit" class="btn">Filter</button>
-            </form>
-
-            <c:choose>
-                <c:when test="${empty transactions}">
-                    <p style="color: #6b7280; text-align: center; margin: 2rem 0;">No transactions found matching the filter criteria.</p>
-                </c:when>
-                <c:otherwise>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Transaction ID</th>
-                                <th>Date & Time</th>
-                                <th>Type</th>
-                                <th>Amount</th>
-                                <th>Sender</th>
-                                <th>Receiver</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="txn" items="${transactions}">
-                                <tr>
-                                    <td>#${txn.transactionId}</td>
-                                    <td>
-                                        <fmt:formatDate value="${txn.transactionDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
-                                    </td>
-                                    <td><span style="font-weight: 600;">${txn.transactionType}</span></td>
-                                    <td style="font-weight: 600; 
-                                        <c:choose>
-                                            <c:when test="${txn.transactionType == 'DEPOSIT'}">color: #166534;</c:when>
-                                            <c:otherwise>color: #991b1b;</c:otherwise>
-                                        </c:choose>">
-                                        $<fmt:formatNumber value="${txn.amount}" pattern="#,##0.00"/>
-                                    </td>
-                                    <td style="font-family: monospace;">${not empty txn.senderAccount ? txn.senderAccount : '-'}</td>
-                                    <td style="font-family: monospace;">${not empty txn.receiverAccount ? txn.receiverAccount : '-'}</td>
-                                    <td>
-                                        <span class="status-badge 
-                                            <c:choose>
-                                                <c:when test="${txn.status == 'SUCCESS'}">status-success</c:when>
-                                                <c:otherwise>status-failed</c:otherwise>
-                                            </c:choose>">
-                                            ${txn.status}
-                                        </span>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
-                </c:otherwise>
-            </c:choose>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="sidebar-item">
+                    <a href="${pageContext.request.contextPath}/logout" style="color:var(--danger-color)">
+                        <svg viewBox="0 0 24 24" stroke="currentColor"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
         </div>
+    </aside>
 
-    </div>
+    <!-- Main -->
+    <main class="dashboard-main">
+        <header class="top-navbar">
+            <div class="search-bar">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <input type="text" placeholder="Search transactions...">
+            </div>
+            <div class="navbar-actions">
+                <button class="nav-icon-btn theme-toggle-btn" aria-label="Toggle Theme">
+                    <svg class="moon-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    <svg class="sun-icon" style="display:none;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m2.828 0l-.707-.707m12.728-12.728l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+                </button>
+                <button class="nav-icon-btn" aria-label="Notifications">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                </button>
+            </div>
+        </header>
 
+        <div class="dashboard-content">
+            <div class="content-header">
+                <div>
+                    <h1 class="page-title">Transaction History</h1>
+                    <p class="page-subtitle">View and filter all your banking transactions</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="mb-4">Filters</h3>
+                <form action="${pageContext.request.contextPath}/transactions" method="get" class="filter-grid">
+                    <div class="form-group">
+                        <label for="accountNumber">Account</label>
+                        <div class="input-wrapper">
+                            <select id="accountNumber" name="accountNumber" class="input-field">
+                                <option value="">All Accounts</option>
+                                <c:forEach var="acc" items="${accounts}">
+                                    <option value="${acc.accountNumber}" <c:if test="${acc.accountNumber == selectedAccount}">selected</c:if>>
+                                        ${acc.accountType} (${acc.accountNumber})
+                                    </option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="transactionType">Transaction Type</label>
+                        <div class="input-wrapper">
+                            <select id="transactionType" name="transactionType" class="input-field">
+                                <option value="ALL" <c:if test="${selectedType == 'ALL'}">selected</c:if>>All Types</option>
+                                <option value="DEPOSIT" <c:if test="${selectedType == 'DEPOSIT'}">selected</c:if>>Deposits</option>
+                                <option value="WITHDRAWAL" <c:if test="${selectedType == 'WITHDRAWAL'}">selected</c:if>>Withdrawals</option>
+                                <option value="TRANSFER" <c:if test="${selectedType == 'TRANSFER'}">selected</c:if>>Transfers</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fromDate">From Date</label>
+                        <div class="input-wrapper">
+                            <input type="date" id="fromDate" name="fromDate" value="${fromDate}" class="input-field">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="toDate">To Date</label>
+                        <div class="input-wrapper">
+                            <input type="date" id="toDate" name="toDate" value="${toDate}" class="input-field">
+                        </div>
+                    </div>
+
+                    <div class="filter-actions">
+                        <button type="submit" class="btn btn-primary">Apply Filters</button>
+                        <a href="${pageContext.request.contextPath}/transactions" class="btn btn-secondary">Clear</a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3 class="mb-4">Transaction Records</h3>
+
+                <c:choose>
+                    <c:when test="${empty transactions}">
+                        <p style="color: var(--text-secondary); margin: 2rem 0; text-align: center;">No transactions found matching the filter criteria.</p>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Transaction ID</th>
+                                        <th>Date & Time</th>
+                                        <th>Type</th>
+                                        <th>Amount</th>
+                                        <th>Sender</th>
+                                        <th>Receiver</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:forEach var="txn" items="${transactions}">
+                                        <tr>
+                                            <td class="table-title-cell">#${txn.transactionId}</td>
+                                            <td class="table-sub-cell">
+                                                <fmt:formatDate value="${txn.transactionDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+                                            </td>
+                                            <td>
+                                                <span class="badge
+                                                    <c:choose>
+                                                        <c:when test="${txn.transactionType == 'DEPOSIT'}">badge-success</c:when>
+                                                        <c:when test="${txn.transactionType == 'TRANSFER'}">badge-warning</c:when>
+                                                        <c:otherwise>badge-danger</c:otherwise>
+                                                    </c:choose>">
+                                                    ${txn.transactionType}
+                                                </span>
+                                            </td>
+                                            <td style="font-weight: 700;
+                                                <c:choose>
+                                                    <c:when test="${txn.transactionType == 'DEPOSIT'}">color: var(--success-color);</c:when>
+                                                    <c:otherwise>color: var(--danger-color);</c:otherwise>
+                                                </c:choose>">
+                                                $<fmt:formatNumber value="${txn.amount}" pattern="#,##0.00"/>
+                                            </td>
+                                            <td style="font-family: monospace; font-size: 0.85rem;">${not empty txn.senderAccount ? txn.senderAccount : '-'}</td>
+                                            <td style="font-family: monospace; font-size: 0.85rem;">${not empty txn.receiverAccount ? txn.receiverAccount : '-'}</td>
+                                            <td>
+                                                <span class="badge
+                                                    <c:choose>
+                                                        <c:when test="${txn.status == 'SUCCESS'}">badge-success</c:when>
+                                                        <c:otherwise>badge-danger</c:otherwise>
+                                                    </c:choose>">
+                                                    ${txn.status}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="${pageContext.request.contextPath}/js/theme.js"></script>
 </body>
 </html>

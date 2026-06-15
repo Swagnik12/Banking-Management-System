@@ -210,6 +210,8 @@
                                     </c:when>
                                 </c:choose>
                             </form>
+                            <a href="${pageContext.request.contextPath}/admin/users/details?id=${usr.userId}"
+                               class="btn btn-secondary btn-sm" style="margin-left:0.4rem;">View</a>
                         </c:if>
                     </td>
                 </tr>
