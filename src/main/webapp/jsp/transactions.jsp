@@ -7,6 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="ctx" content="${pageContext.request.contextPath}">
     <title>Transaction History - FinTrust Global</title>
 
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/variables.css">
@@ -123,9 +124,7 @@
                     <svg class="moon-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                     <svg class="sun-icon" style="display:none;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m2.828 0l-.707-.707m12.728-12.728l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
                 </button>
-                <button class="nav-icon-btn" aria-label="Notifications">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-                </button>
+
             </div>
         </header>
 
@@ -228,12 +227,30 @@
                                             <td style="font-weight: 700;
                                                 <c:choose>
                                                     <c:when test="${txn.transactionType == 'DEPOSIT'}">color: var(--success-color);</c:when>
+                                                    <c:when test="${txn.transactionType == 'TRANSFER' && txn.receiverAccount == selectedAccount}">color: var(--success-color);</c:when>
                                                     <c:otherwise>color: var(--danger-color);</c:otherwise>
                                                 </c:choose>">
-                                                $<fmt:formatNumber value="${txn.amount}" pattern="#,##0.00"/>
+                                                <c:choose>
+                                                    <c:when test="${txn.transactionType == 'DEPOSIT'}">+</c:when>
+                                                    <c:when test="${txn.transactionType == 'TRANSFER' && txn.receiverAccount == selectedAccount}">+</c:when>
+                                                    <c:otherwise>-</c:otherwise>
+                                                </c:choose>
+                                                ₹<fmt:formatNumber value="${txn.amount}" pattern="#,##0.00"/>
                                             </td>
-                                            <td style="font-family: monospace; font-size: 0.85rem;">${not empty txn.senderAccount ? txn.senderAccount : '-'}</td>
-                                            <td style="font-family: monospace; font-size: 0.85rem;">${not empty txn.receiverAccount ? txn.receiverAccount : '-'}</td>
+                                            <td style="font-family: monospace; font-size: 0.85rem;">
+                                                <c:choose>
+                                                    <c:when test="${txn.transactionType == 'TRANSFER' && txn.senderAccount == selectedAccount}">You (Sender)</c:when>
+                                                    <c:when test="${txn.transactionType == 'TRANSFER'}">${txn.senderAccount}</c:when>
+                                                    <c:otherwise>${not empty txn.senderAccount ? txn.senderAccount : '-'}</c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                            <td style="font-family: monospace; font-size: 0.85rem;">
+                                                <c:choose>
+                                                    <c:when test="${txn.transactionType == 'TRANSFER' && txn.receiverAccount == selectedAccount}">You (Receiver)</c:when>
+                                                    <c:when test="${txn.transactionType == 'TRANSFER'}">${txn.receiverAccount}</c:when>
+                                                    <c:otherwise>${not empty txn.receiverAccount ? txn.receiverAccount : '-'}</c:otherwise>
+                                                </c:choose>
+                                            </td>
                                             <td>
                                                 <span class="badge
                                                     <c:choose>

@@ -65,7 +65,7 @@ public class DepositServlet extends HttpServlet {
 
             boolean success = accountService.deposit(accountNumber, amount);
             if (success) {
-                request.setAttribute("success", "Deposit of $" + amount + " successful!");
+                request.setAttribute("success", "Deposit of \u20B9" + amount + " successful!");
             } else {
                 request.setAttribute("error", "Deposit failed. Ensure account is ACTIVE.");
             }

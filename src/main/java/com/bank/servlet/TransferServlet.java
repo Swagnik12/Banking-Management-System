@@ -72,7 +72,7 @@ public class TransferServlet extends HttpServlet {
 
             boolean success = accountService.transfer(fromAccount, toAccount, amount);
             if (success) {
-                request.setAttribute("success", "Transfer of $" + amount + " to account " + toAccount + " successful!");
+                request.setAttribute("success", "Transfer of \u20B9" + amount + " to account " + toAccount + " successful!");
             } else {
                 request.setAttribute("error", "Transfer failed. Check connection.");
             }

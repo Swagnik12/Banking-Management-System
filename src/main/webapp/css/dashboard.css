@@ -7,13 +7,17 @@
 
 /* Sidebar Layout */
 .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 280px;
+    height: 100vh;
+    overflow-y: auto;
     background-color: var(--bg-sidebar);
     padding: 2rem 1.5rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    flex-shrink: 0;
     transition: all var(--transition-normal);
     border-right: 1px solid var(--border-color);
     z-index: 100;
@@ -113,10 +117,12 @@
 
 /* Main Dashboard Panel */
 .dashboard-main {
+    margin-left: 280px;
     flex: 1;
     display: flex;
     flex-direction: column;
     min-width: 0;
+    height: 100vh;
     overflow-y: auto;
 }
 
@@ -637,6 +643,9 @@
 @media (max-width: 768px) {
     .sidebar {
         display: none;
+    }
+    .dashboard-main {
+        margin-left: 0;
     }
     .top-navbar {
         padding: 0 1rem;

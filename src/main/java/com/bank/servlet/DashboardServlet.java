@@ -46,12 +46,18 @@ public class DashboardServlet extends HttpServlet {
             request.setAttribute("accounts", accounts);
 
             List<Transaction> recentTransactions = new ArrayList<>();
+            String contextAccountNumber = null;
+            int totalTransactionCount = 0;
+            Account primaryAccount = null;
             // Load transactions for the first active account found, if any
             if (accounts != null && !accounts.isEmpty()) {
                 for (Account acc : accounts) {
                     if ("ACTIVE".equalsIgnoreCase(acc.getStatus())) {
-                        List<Transaction> txns = transactionService.getTransactionHistory(acc.getAccountNumber());
+                        primaryAccount = acc;
+                        contextAccountNumber = acc.getAccountNumber();
+                        List<Transaction> txns = transactionService.getTransactionHistory(contextAccountNumber);
                         if (txns != null) {
+                            totalTransactionCount = txns.size();
                             // Cap at top 5 recent transactions
                             recentTransactions.addAll(txns.subList(0, Math.min(txns.size(), 5)));
                         }
@@ -60,6 +66,9 @@ public class DashboardServlet extends HttpServlet {
                 }
             }
             request.setAttribute("recentTransactions", recentTransactions);
+            request.setAttribute("contextAccountNumber", contextAccountNumber);
+            request.setAttribute("totalTransactionCount", totalTransactionCount);
+            request.setAttribute("primaryAccount", primaryAccount);
 
             request.getRequestDispatcher("/jsp/dashboard.jsp").forward(request, response);
         } catch (Exception e) {

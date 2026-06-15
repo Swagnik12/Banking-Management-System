@@ -59,7 +59,6 @@ public class ProfileServlet extends HttpServlet {
                     boolean success = userService.updateProfile(updatedUser);
                     if (success) {
                         request.setAttribute("success", "Profile updated successfully!");
-                        // Refresh user object in session
                         request.getSession().setAttribute("user", updatedUser);
                     } else {
                         request.setAttribute("error", "Failed to update profile details");

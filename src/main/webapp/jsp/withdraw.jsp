@@ -7,6 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="ctx" content="${pageContext.request.contextPath}">
     <title>Withdraw Funds - FinTrust Global</title>
 
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/variables.css">
@@ -37,7 +38,6 @@
 <body class="page-transition">
 
 <div class="dashboard-container">
-    <!-- Sidebar -->
     <aside class="sidebar">
         <div>
             <div class="sidebar-brand">
@@ -104,7 +104,6 @@
         </div>
     </aside>
 
-    <!-- Main -->
     <main class="dashboard-main">
         <header class="top-navbar">
             <div class="search-bar">
@@ -116,9 +115,7 @@
                     <svg class="moon-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                     <svg class="sun-icon" style="display:none;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m2.828 0l-.707-.707m12.728-12.728l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
                 </button>
-                <button class="nav-icon-btn" aria-label="Notifications">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-                </button>
+
             </div>
         </header>
 
@@ -131,7 +128,6 @@
             </div>
 
             <div class="main-grid">
-                <!-- Withdraw Form -->
                 <div class="card">
                     <h3 class="mb-4">Secure Withdrawal</h3>
 
@@ -157,7 +153,7 @@
                                     <c:forEach var="acc" items="${accounts}">
                                         <c:if test="${acc.status == 'ACTIVE'}">
                                             <option value="${acc.accountNumber}">
-                                                ${acc.accountType} (*${fn:substring(acc.accountNumber, fn:length(acc.accountNumber) - 4, fn:length(acc.accountNumber))}) &mdash; Bal: $<fmt:formatNumber value="${acc.balance}" pattern="#,##0.00"/>
+                                                ${acc.accountType} (*${fn:substring(acc.accountNumber, fn:length(acc.accountNumber) - 4, fn:length(acc.accountNumber))}) &mdash; Bal: ₹<fmt:formatNumber value="${acc.balance}" pattern="#,##0.00"/>
                                             </option>
                                         </c:if>
                                     </c:forEach>
@@ -166,7 +162,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="amount">Withdrawal Amount (USD)</label>
+                            <label for="amount">Withdrawal Amount (₹)</label>
                             <div class="input-wrapper">
                                 <input type="number" id="amount" name="amount" step="0.01" min="0.01" required placeholder="0.00" class="input-field">
                             </div>
@@ -179,28 +175,71 @@
                     </form>
                 </div>
 
-                <!-- Right panel -->
                 <div class="column-side">
-                    <div class="card limit-card">
-                        <h3 class="op-card-title">Daily Limits</h3>
-                        <div class="limit-info d-flex justify-between align-center mt-2">
-                            <span class="text-muted" style="font-size:0.8rem;">$12,500 / $50,000 Used</span>
-                            <span style="font-size:0.8rem; font-weight:700;">25%</span>
-                        </div>
-                        <div class="limit-progress-bar">
-                            <div class="limit-progress-fill" style="width:25%;"></div>
-                        </div>
-                        <div class="limits-labels d-flex justify-between mt-2" style="font-size:0.75rem;">
-                            <div>
-                                <div class="text-muted">Single TX Limit</div>
-                                <div style="font-weight:700; font-size:0.95rem; margin-top:0.15rem;">$10,000</div>
+                    <c:choose>
+                        <c:when test="${empty accounts}">
+                            <div class="card">
+                                <h3 class="op-card-title">Account Quick Stats</h3>
+                                <div class="d-flex align-center" style="gap:0.75rem; padding:0.5rem 0;">
+                                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width:32px;height:32px;flex-shrink:0;color:var(--text-muted);"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"></path></svg>
+                                    <div>
+                                        <div style="font-weight:600; font-size:0.85rem; color:var(--text-primary);">No active account available</div>
+                                        <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:0.15rem;">Create an account to view account statistics.</div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="text-right">
-                                <div class="text-muted">Remaining Daily</div>
-                                <div style="font-weight:700; font-size:0.95rem; margin-top:0.15rem;">$37,500</div>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="card">
+                                <h3 class="op-card-title">Account Quick Stats</h3>
+                                <div style="display:flex; flex-direction:column; gap:1rem;">
+                                    <div style="display:flex; align-items:center; gap:0.75rem;">
+                                        <div style="width:36px; height:36px; border-radius:var(--radius-sm); background:var(--success-bg); color:var(--success-color); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width:18px;height:18px;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
+                                        </div>
+                                        <div>
+                                            <div style="font-size:0.7rem; font-weight:600; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em;">Account Type</div>
+                                            <div style="font-weight:700; font-size:0.95rem; color:var(--text-primary);">${accounts[0].accountType}</div>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:0.75rem;">
+                                        <div style="width:36px; height:36px; border-radius:var(--radius-sm); background:var(--info-bg); color:var(--info-color); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width:18px;height:18px;"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                                        </div>
+                                        <div>
+                                            <div style="font-size:0.7rem; font-weight:600; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em;">Balance</div>
+                                            <div style="font-weight:700; font-size:1.1rem; color:var(--success-color);">₹<fmt:formatNumber value="${accounts[0].balance}" pattern="#,##0.00"/></div>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:0.75rem;">
+                                        <div style="width:36px; height:36px; border-radius:var(--radius-sm); background:rgba(59,130,246,0.12); color:var(--primary-color); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width:18px;height:18px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                        </div>
+                                        <div>
+                                            <div style="font-size:0.7rem; font-weight:600; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em;">Status</div>
+                                            <span class="badge
+                                                <c:choose>
+                                                    <c:when test="${accounts[0].status == 'ACTIVE'}">badge-success</c:when>
+                                                    <c:when test="${accounts[0].status == 'PENDING'}">badge-warning</c:when>
+                                                    <c:otherwise>badge-danger</c:otherwise>
+                                                </c:choose>">
+                                                ${accounts[0].status}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:0.75rem;">
+                                        <div style="width:36px; height:36px; border-radius:var(--radius-sm); background:var(--warning-bg); color:var(--warning-color); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width:18px;height:18px;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                                        </div>
+                                        <div>
+                                            <div style="font-size:0.7rem; font-weight:600; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em;">Account Number</div>
+                                            <div style="font-weight:700; font-size:0.85rem; color:var(--text-primary); font-family:monospace; letter-spacing:0.05em;">${accounts[0].accountNumber}</div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        </c:otherwise>
+                    </c:choose>
 
                     <div class="card d-flex align-center" style="gap:1rem; flex-direction:row; padding:1.25rem;">
                         <div class="avatar avatar-green" style="width:42px; height:42px; background-color:rgba(16,185,129,0.08); flex-shrink:0;">

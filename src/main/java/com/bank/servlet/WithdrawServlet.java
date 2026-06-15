@@ -65,7 +65,7 @@ public class WithdrawServlet extends HttpServlet {
 
             boolean success = accountService.withdraw(accountNumber, amount);
             if (success) {
-                request.setAttribute("success", "Withdrawal of $" + amount + " successful!");
+                request.setAttribute("success", "Withdrawal of \u20B9" + amount + " successful!");
             } else {
                 request.setAttribute("error", "Withdrawal failed. Check if account is ACTIVE.");
             }
