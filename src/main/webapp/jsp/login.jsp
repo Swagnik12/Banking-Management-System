@@ -244,7 +244,7 @@
                         <input type="checkbox" name="rememberMe" id="rememberMe">
                         <span>Remember Me</span>
                     </label>
-                    <a href="#" class="forgot-link">Forgot Password?</a>
+                    <a href="#" id="forgotPasswordLink" class="forgot-link">Forgot Password?</a>
                 </div>
 
                 <button type="submit" class="btn btn-primary">
@@ -256,9 +256,8 @@
             <div class="divider">Or Continue With</div>
 
             <div class="social-buttons">
-                <button type="button" class="btn btn-social">
+                <button type="button" class="btn btn-social" id="googleSignInBtn">
                     <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" alt="Google">
-                    <!-- TODO: Firebase Google Authentication -->
                     <span>Continue with Google</span>
                 </button>
             </div>
@@ -273,5 +272,74 @@
     <script src="${pageContext.request.contextPath}/js/theme.js"></script>
 
     <!-- Session flash cleanup handled in LoginServlet doGet -->
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBV1INHg4vFhnWbkY0fo-gWCvOfk4dbeE4",
+            authDomain: "fintrust-bms.firebaseapp.com",
+            projectId: "fintrust-bms",
+            storageBucket: "fintrust-bms.firebasestorage.app",
+            messagingSenderId: "135312615086",
+            appId: "1:135312615086:web:e3bcc343bdf34e46ee6f3f",
+            measurementId: "G-4M6D9KJXPC"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+
+        document.getElementById('googleSignInBtn').addEventListener('click', function () {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithPopup(provider)
+                .then(function (result) {
+                    const user = result.user;
+                    const fullName = user.displayName;
+                    const email = user.email;
+
+                    var form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '${pageContext.request.contextPath}/google-login';
+
+                    var nameInput = document.createElement('input');
+                    nameInput.type = 'hidden';
+                    nameInput.name = 'fullName';
+                    nameInput.value = fullName;
+                    form.appendChild(nameInput);
+
+                    var emailInput = document.createElement('input');
+                    emailInput.type = 'hidden';
+                    emailInput.name = 'email';
+                    emailInput.value = email;
+                    form.appendChild(emailInput);
+
+                    document.body.appendChild(form);
+                    form.submit();
+                })
+                .catch(function (error) {
+                    console.error('Firebase Google Sign-In Error:', error);
+                    alert('Google sign-in failed. Please try again.');
+                });
+        });
+
+        document.getElementById('forgotPasswordLink').addEventListener('click', function (e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            if (!email) {
+                alert('Please enter your email address first.');
+                return;
+            }
+            firebase.auth().sendPasswordResetEmail(email)
+                .then(function () {
+                    alert('Password reset email sent. Please check your inbox.');
+                })
+                .catch(function (error) {
+                    var msg = 'Failed to send reset email.';
+                    if (error.code === 'auth/user-not-found') msg = 'No account found with this email.';
+                    else if (error.code === 'auth/invalid-email') msg = 'Please enter a valid email address.';
+                    alert(msg);
+                });
+        });
+    </script>
 </body>
 </html>

@@ -24,14 +24,15 @@ public class AuthFilter implements Filter {
         String contextPath = httpRequest.getContextPath();
         String relativeUri = uri.substring(contextPath.length());
 
-        // Allow access to login, register, resources, and root path without authentication
+        // Allow access to login, register, google-login, resources, and root path without authentication
         boolean isLoginRequest = relativeUri.equals("/login") || relativeUri.equals("/");
         boolean isRegisterRequest = relativeUri.equals("/register");
+        boolean isGoogleLoginRequest = relativeUri.equals("/google-login");
         boolean isStaticResource = relativeUri.startsWith("/css/") || 
                                    relativeUri.startsWith("/js/") || 
                                    relativeUri.startsWith("/images/");
 
-        if (isLoginRequest || isRegisterRequest || isStaticResource) {
+        if (isLoginRequest || isRegisterRequest || isGoogleLoginRequest || isStaticResource) {
             chain.doFilter(request, response);
             return;
         }

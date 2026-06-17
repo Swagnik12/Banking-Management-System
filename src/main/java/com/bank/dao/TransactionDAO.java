@@ -140,6 +140,28 @@ public class TransactionDAO {
         return list;
     }
 
+    public List<Transaction> getRecentTransactionsByUserId(int userId, int limit) {
+        List<Transaction> list = new ArrayList<>();
+        String sql = "SELECT t.* FROM transactions t " +
+                     "WHERE t.sender_account   IN (SELECT account_number FROM accounts WHERE user_id = ?) " +
+                     "   OR t.receiver_account IN (SELECT account_number FROM accounts WHERE user_id = ?) " +
+                     "ORDER BY t.transaction_date DESC LIMIT ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, userId);
+            ps.setInt(3, limit);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(mapResultSetToTransaction(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     public List<Transaction> getAllTransactions() {
         List<Transaction> list = new ArrayList<>();
         String sql = "SELECT * FROM transactions ORDER BY transaction_date DESC";

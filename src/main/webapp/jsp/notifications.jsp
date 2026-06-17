@@ -57,10 +57,10 @@
         </div>
         <div class="sidebar-footer">
             <div class="sidebar-profile">
-                <div class="avatar avatar-green">A</div>
+                <div class="avatar avatar-green">${sessionScope.user.fullName.substring(0,1)}</div>
                 <div class="sidebar-profile-info">
-                    <div class="sidebar-profile-name">System Admin</div>
-                    <div class="sidebar-profile-role">Level 4 Controller</div>
+                    <div class="sidebar-profile-name">${sessionScope.user.fullName}</div>
+                    <div class="sidebar-profile-role">${sessionScope.user.role} Account</div>
                 </div>
             </div>
             <ul class="sidebar-menu">

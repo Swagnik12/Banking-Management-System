@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/admin/users/details")
+@WebServlet({"/admin/users/details", "/customer-details"})
 public class CustomerDetailsServlet extends HttpServlet {
     private final UserDAO        userDAO        = new UserDAO();
     private final AccountDAO     accountDAO     = new AccountDAO();
@@ -39,7 +39,7 @@ public class CustomerDetailsServlet extends HttpServlet {
             }
 
             List<Account>     accounts     = accountDAO.getAccountsByUserId(userId);
-            List<Transaction> transactions = transactionDAO.getTransactionsByUserId(userId);
+            List<Transaction> transactions = transactionDAO.getRecentTransactionsByUserId(userId, 10);
 
             // Compute total balance across all accounts
             double totalBalance = 0;

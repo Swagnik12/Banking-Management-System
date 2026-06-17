@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isErrorPage="true" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,7 +34,14 @@
             </c:if>
         </div>
         
-        <a href="${pageContext.request.contextPath}/dashboard" class="btn">Return to Dashboard</a>
+        <c:choose>
+            <c:when test="${sessionScope.user.role == 'ADMIN'}">
+                <a href="${pageContext.request.contextPath}/admin/dashboard" class="btn">Return to Dashboard</a>
+            </c:when>
+            <c:otherwise>
+                <a href="${pageContext.request.contextPath}/dashboard" class="btn">Return to Dashboard</a>
+            </c:otherwise>
+        </c:choose>
     </div>
 </body>
 </html>
