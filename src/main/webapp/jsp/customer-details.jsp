@@ -49,7 +49,7 @@
             width: 64px;
             height: 64px;
             border-radius: var(--radius-full);
-            background-color: rgba(37, 99, 235, 0.1);
+            background-color: rgba(20, 184, 166, 0.1);
             color: var(--primary-color);
             display: flex;
             align-items: center;
@@ -95,8 +95,10 @@
     <aside class="sidebar">
         <div>
             <div class="sidebar-brand">
-                <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
-                <span>Admin Portal</span>
+                <a href="${pageContext.request.contextPath}/admin/dashboard" style="display:flex; align-items:center; gap:0.5rem; color:inherit; text-decoration:none;">
+                    <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+                    <span>Admin Portal</span>
+                </a>
             </div>
             <ul class="sidebar-menu">
                 <li class="sidebar-item">
@@ -204,7 +206,7 @@
             <!-- Summary strip -->
             <div class="summary-strip">
                 <div class="card summary-item">
-                    <div class="summary-icon" style="background:rgba(37,99,235,0.1); color:var(--primary-color);">
+                    <div class="summary-icon" style="background:rgba(20,184,166,0.1); color:var(--primary-color);">
                         <svg viewBox="0 0 24 24"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
                     </div>
                     <div>
@@ -218,7 +220,7 @@
                     </div>
                     <div>
                         <div class="summary-label">Total Balance</div>
-                        <div class="summary-value" style="color:var(--success-color);">$<fmt:formatNumber value="${totalBalance}" pattern="#,##0.00"/></div>
+                        <div class="summary-value" style="color:var(--success-color);">₹<fmt:formatNumber value="${totalBalance}" pattern="#,##0.00"/></div>
                     </div>
                 </div>
                 <div class="card summary-item">
@@ -300,7 +302,7 @@
                                     <td style="color:var(--text-muted);">#${acc.accountId}</td>
                                     <td style="font-family:monospace; font-weight:600; color:var(--primary-color);">${acc.accountNumber}</td>
                                     <td><span style="font-weight:500;">${acc.accountType}</span></td>
-                                    <td style="font-weight:700; color:var(--success-color);">$<fmt:formatNumber value="${acc.balance}" pattern="#,##0.00"/></td>
+                                    <td style="font-weight:700; color:var(--success-color);">₹<fmt:formatNumber value="${acc.balance}" pattern="#,##0.00"/></td>
                                     <td>
                                         <c:choose>
                                             <c:when test="${acc.status == 'ACTIVE'}"><span class="badge badge-success">ACTIVE</span></c:when>
@@ -351,7 +353,7 @@
                                             <c:otherwise><span class="badge badge-info">TRANSFER</span></c:otherwise>
                                         </c:choose>
                                     </td>
-                                    <td style="font-weight:700;">$<fmt:formatNumber value="${txn.amount}" pattern="#,##0.00"/></td>
+                                    <td style="font-weight:700;">₹<fmt:formatNumber value="${txn.amount}" pattern="#,##0.00"/></td>
                                     <td style="font-family:monospace; font-size:0.85rem;">${not empty txn.senderAccount ? txn.senderAccount : '—'}</td>
                                     <td style="font-family:monospace; font-size:0.85rem;">${not empty txn.receiverAccount ? txn.receiverAccount : '—'}</td>
                                     <td><span class="badge badge-success">${txn.status}</span></td>

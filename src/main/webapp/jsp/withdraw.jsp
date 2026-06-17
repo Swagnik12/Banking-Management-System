@@ -41,8 +41,10 @@
     <aside class="sidebar">
         <div>
             <div class="sidebar-brand">
-                <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
-                <span>FinTrust</span>
+                <a href="${pageContext.request.contextPath}/" style="display:flex; align-items:center; gap:0.5rem; color:inherit; text-decoration:none;">
+                    <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+                    <span>FinTrust</span>
+                </a>
             </div>
             <ul class="sidebar-menu">
                 <li class="sidebar-item">
@@ -212,7 +214,7 @@
                                         </div>
                                     </div>
                                     <div style="display:flex; align-items:center; gap:0.75rem;">
-                                        <div style="width:36px; height:36px; border-radius:var(--radius-sm); background:rgba(59,130,246,0.12); color:var(--primary-color); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                        <div style="width:36px; height:36px; border-radius:var(--radius-sm); background:rgba(20,184,166,0.12); color:var(--primary-color); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                                             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width:18px;height:18px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                                         </div>
                                         <div>

@@ -22,10 +22,12 @@
         <!-- Sidebar Left Panel -->
         <aside class="sidebar">
             <div>
-                <div class="sidebar-brand">
+            <div class="sidebar-brand">
+                <a href="${pageContext.request.contextPath}/admin/dashboard" style="display:flex; align-items:center; gap:0.5rem; color:inherit; text-decoration:none;">
                     <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
                     <span>Admin Portal</span>
-                </div>
+                </a>
+            </div>
                 
                 <ul class="sidebar-menu">
                     <li class="sidebar-item">

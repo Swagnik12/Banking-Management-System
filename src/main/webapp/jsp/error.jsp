@@ -11,8 +11,8 @@
         h2 { color: #1f2937; margin-top: 0; font-size: 1.8rem; }
         p { color: #4b5563; font-size: 1.05rem; line-height: 1.5; margin-bottom: 1.5rem; }
         .details { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1rem; font-family: monospace; font-size: 0.9rem; text-align: left; overflow-x: auto; color: #ef4444; max-height: 150px; margin-bottom: 1.5rem; }
-        .btn { background-color: #2563eb; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; transition: background-color 0.2s; }
-        .btn:hover { background-color: #1d4ed8; }
+        .btn { background-color: #14B8A6; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; transition: background-color 0.2s; }
+        .btn:hover { background-color: #0EA5A0; }
     </style>
 </head>
 <body>

@@ -365,7 +365,7 @@
 }
 
 .recipient-avatar-btn.new-btn .avatar {
-    background-color: rgba(37, 99, 235, 0.1);
+    background-color: rgba(20, 184, 166, 0.1);
     color: var(--primary-color);
     border: 2px dashed var(--primary-color);
 }
@@ -437,7 +437,7 @@
 
 .notification-count-text {
     font-size: 0.72rem;
-    background-color: rgba(37, 99, 235, 0.1);
+    background-color: rgba(20, 184, 166, 0.1);
     color: var(--primary-color);
     padding: 0.25rem 0.6rem;
     border-radius: var(--radius-full);
@@ -518,7 +518,7 @@
 }
 
 .notif-icon-info {
-    background-color: rgba(59, 130, 246, 0.12);
+    background-color: rgba(20, 184, 166, 0.12);
     color: var(--info-color);
 }
 

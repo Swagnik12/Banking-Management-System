@@ -1,12 +1,12 @@
 /* variables.css */
 :root {
     /* Color Palette - Light Theme Default */
-    --primary-color: #2563eb;
-    --primary-hover: #1d4ed8;
-    --primary-rgb: 37, 99, 235;
+    --primary-color: #14B8A6;
+    --primary-hover: #0EA5A0;
+    --primary-rgb: 20, 184, 166;
     
-    --secondary-color: #4f46e5;
-    --secondary-hover: #4338ca;
+    --secondary-color: #14B8A6;
+    --secondary-hover: #0EA5A0;
     
     --success-color: #10b981;
     --success-hover: #059669;
@@ -20,12 +20,13 @@
     --warning-hover: #d97706;
     --warning-bg: rgba(245, 158, 11, 0.1);
 
-    --info-color: #3b82f6;
-    --info-bg: rgba(59, 130, 246, 0.1);
+    --info-color: #14B8A6;
+    --info-bg: rgba(20, 184, 166, 0.1);
 
     /* Backgrounds & Panels */
-    --bg-main: #f8fafc;
+    --bg-main: #FFFDF7;
     --bg-card: #ffffff;
+    --bg-card-soft: #FAF6EE;
     --bg-sidebar: #0f172a;
     --sidebar-text: #94a3b8;
     --sidebar-text-active: #ffffff;
@@ -41,8 +42,8 @@
     --border-color: #e2e8f0;
     --input-bg: #ffffff;
     --input-border: #cbd5e1;
-    --input-focus: #2563eb;
-    --input-focus-shadow: rgba(37, 99, 235, 0.15);
+    --input-focus: #14B8A6;
+    --input-focus-shadow: rgba(20, 184, 166, 0.15);
 
     /* UI Details */
     --radius-sm: 6px;
@@ -53,7 +54,7 @@
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-    --shadow-glow: 0 0 20px rgba(37, 99, 235, 0.15);
+    --shadow-glow: 0 0 20px rgba(20, 184, 166, 0.15);
 
     --transition-fast: 0.15s ease;
     --transition-normal: 0.25s ease;
@@ -63,9 +64,10 @@
 [data-theme="dark"] {
     --bg-main: #0b0f19;
     --bg-card: #151b2c;
+    --bg-card-soft: #151b2c;
     --bg-sidebar: #0b0f19;
     --sidebar-text: #94a3b8;
-    --sidebar-text-active: #3b82f6;
+    --sidebar-text-active: #14B8A6;
     --sidebar-hover: #1e293b;
     
     --text-primary: #f8fafc;
@@ -75,8 +77,8 @@
     --border-color: #1e293b;
     --input-bg: #1e293b;
     --input-border: #334155;
-    --input-focus: #3b82f6;
-    --input-focus-shadow: rgba(59, 130, 246, 0.3);
+    --input-focus: #14B8A6;
+    --input-focus-shadow: rgba(20, 184, 166, 0.3);
     
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);

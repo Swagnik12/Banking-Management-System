@@ -14,6 +14,16 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/animations.css">
     
     <style>
+        .btn-primary,
+        .btn-primary:hover,
+        .btn-primary:focus,
+        .btn-primary:active {
+            color: #ffffff !important;
+        }
+        .btn-primary:hover {
+            background: #0ea5a0;
+            box-shadow: 0 4px 12px rgba(20, 184, 166, 0.4);
+        }
         body {
             min-height: 100vh;
             display: flex;
@@ -56,7 +66,7 @@
             left: -20%;
             width: 80%;
             height: 80%;
-            background: radial-gradient(circle, rgba(37, 99, 235, 0.15) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(20, 184, 166, 0.15) 0%, transparent 70%);
             pointer-events: none;
         }
 
@@ -110,7 +120,7 @@
         }
 
         .feature-icon-wrapper {
-            background-color: rgba(37, 99, 235, 0.1);
+            background-color: rgba(20, 184, 166, 0.12);
             color: var(--primary-color);
             width: 40px;
             height: 40px;
@@ -182,11 +192,145 @@
                 grid-template-columns: 1fr;
             }
             .promo-column {
-                display: none; /* Hide marketing panel on tablet/mobile screens */
+                display: none;
             }
             .form-column {
                 padding: 2.5rem 1.5rem;
             }
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 560px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            animation: fadeScaleIn 0.2s ease;
+        }
+
+        @keyframes fadeScaleIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem 1.5rem 0 1.5rem;
+        }
+
+        .modal-header h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 0.25rem;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color var(--transition-fast), background var(--transition-fast);
+        }
+
+        .modal-close:hover {
+            color: var(--text-primary);
+            background: var(--bg-subtle);
+        }
+
+        .modal-close svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+            max-height: 60vh;
+        }
+
+        .modal-body p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .modal-body ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 1.5rem 0;
+        }
+
+        .modal-body ul li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .modal-body ul li:last-child {
+            border-bottom: none;
+        }
+
+        .modal-body ul li::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 0.5rem;
+        }
+
+        .modal-footer {
+            padding: 0 1.5rem 1.5rem 1.5rem;
+        }
+
+        .modal-footer .btn {
+            width: 100%;
+        }
+
+        .terms-link {
+            color: var(--primary-color);
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .terms-link:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -204,8 +348,10 @@
         <!-- Promo left banner -->
         <div class="promo-column">
             <div class="brand-header">
-                <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
-                FinTrust Global
+                <a href="${pageContext.request.contextPath}/" style="display:flex; align-items:center; gap:0.5rem; color:inherit; text-decoration:none;">
+                    <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+                    FinTrust Global
+                </a>
             </div>
             
             <div class="promo-content">
@@ -326,9 +472,60 @@
                 <div class="form-options">
                     <label class="checkbox-group">
                         <input type="checkbox" name="terms" id="terms" required>
-                        <span>I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</span>
+                        <span>I agree to the <a class="terms-link" id="termsModalBtn">Terms, Privacy Policy & Customer Agreement</a></span>
                     </label>
                 </div>
+
+                <!-- Terms Modal -->
+                <div class="modal-overlay" id="termsModal">
+                    <div class="modal-card">
+                        <div class="modal-header">
+                            <h3>Terms, Privacy Policy & Customer Agreement</h3>
+                            <button class="modal-close" id="modalCloseBtn" aria-label="Close">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Please review the following terms governing your use of FinTrust Global banking services.</p>
+                            <ul>
+                                <li>Customer data is securely stored using industry-standard encryption.</li>
+                                <li>Transactions are monitored for security and compliance.</li>
+                                <li>Users are responsible for account credentials.</li>
+                                <li>Personal information is not shared without consent.</li>
+                                <li>Accounts violating policies may be suspended.</li>
+                                <li>Electronic records are accepted as official banking records.</li>
+                            </ul>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" id="modalCloseBtn2">Close</button>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    (function() {
+                        var modal = document.getElementById('termsModal');
+                        var openBtn = document.getElementById('termsModalBtn');
+                        var closeBtns = document.querySelectorAll('#modalCloseBtn, #modalCloseBtn2');
+
+                        openBtn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            modal.classList.add('active');
+                        });
+
+                        closeBtns.forEach(function(btn) {
+                            btn.addEventListener('click', function() {
+                                modal.classList.remove('active');
+                            });
+                        });
+
+                        modal.addEventListener('click', function(e) {
+                            if (e.target === modal) {
+                                modal.classList.remove('active');
+                            }
+                        });
+                    })();
+                </script>
 
                 <button type="submit" class="btn btn-primary">Create Account</button>
             </form>

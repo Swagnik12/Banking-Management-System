@@ -14,14 +14,24 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/animations.css">
     
     <style>
+        .btn-primary,
+        .btn-primary:hover,
+        .btn-primary:focus,
+        .btn-primary:active {
+            color: #ffffff !important;
+        }
+        .btn-primary:hover {
+            background: #0ea5a0;
+            box-shadow: 0 4px 12px rgba(20, 184, 166, 0.4);
+        }
         body {
             display: flex;
             min-height: 100vh;
             align-items: center;
             justify-content: center;
             padding: 1.5rem;
-            background: radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.05) 0%, transparent 90%),
-                        radial-gradient(circle at 90% 80%, rgba(79, 70, 229, 0.05) 0%, transparent 90%),
+            background: radial-gradient(circle at 10% 20%, rgba(20, 184, 166, 0.06) 0%, transparent 90%),
+                        radial-gradient(circle at 90% 80%, rgba(20, 184, 166, 0.04) 0%, transparent 90%),
                         var(--bg-main);
             position: relative;
             overflow-x: hidden;
@@ -68,7 +78,7 @@
         .lock-badge {
             width: 56px;
             height: 56px;
-            background-color: rgba(37, 99, 235, 0.08);
+            background-color: rgba(20, 184, 166, 0.1);
             color: var(--primary-color);
             border-radius: var(--radius-full);
             display: flex;
@@ -171,8 +181,10 @@
 
     <div class="auth-container">
         <div class="auth-brand">
-            <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
-            FinTrust Global
+            <a href="${pageContext.request.contextPath}/" style="display:flex; align-items:center; gap:0.5rem; color:inherit; text-decoration:none;">
+                <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+                FinTrust Global
+            </a>
         </div>
 
         <div class="auth-card">
@@ -246,11 +258,8 @@
             <div class="social-buttons">
                 <button type="button" class="btn btn-social">
                     <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" alt="Google">
-                    <span>Google</span>
-                </button>
-                <button type="button" class="btn btn-social">
-                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width:18px;height:18px;color:var(--text-secondary);"><path stroke-linecap="round" stroke-linejoin="round" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 009 11a13.916 13.916 0 00-1.5-3.63L6.5 6.5m1.5-1.5L7.5 4m-4 10a11.975 11.975 0 001.077 4.908M15 15c0 1.63-.339 3.18-.95 4.591M15 15a12.022 12.022 0 001.025-4.591M15 15h.008M15 11a12.022 12.022 0 01-1.025-4.59M15 11h.008M15 11v3.007m0-3.007a12.06 12.06 0 00.95-4.593M15 14v.008M15 14a12.06 12.06 0 00.95 4.591M15 14h.008M19 11a11.975 11.975 0 00-1.077-4.908M19 11v3m0-3h.008m0 3h-.008m0 0a11.975 11.975 0 01-1.077 4.908M19 14h.008m0 0v1a11.975 11.975 0 01-1.077 4.908M19 14a11.975 11.975 0 001.077-4.908M19 14h.008M10 18.007h.008M8 14h.008M8 11h.008M6 14h.008M6 11h.008M6 8h.008M11.5 5.5h.008M11.5 8.5h.008M11.5 11.5h.008"></path></svg>
-                    <span>Biometrics</span>
+                    <!-- TODO: Firebase Google Authentication -->
+                    <span>Continue with Google</span>
                 </button>
             </div>
 
